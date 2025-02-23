@@ -7,4 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
 
+  account          Account?
+  transactionsFrom Transaction[] @relation("from")
+  transactionsTo   Transaction[] @relation("to")
+}
+
+model Account {
+  id        Int      @id @default(autoincrement())
+  amount    Int      @default(0)
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  amount    Int
+  fromId    Int
+  toId      Int
+  createdAt DateTime @default(now())
+
+  from User @relation("from", fields: [fromId], references: [id])
+  to   User @relation("to", fields: [toId], references: [id])
+}
