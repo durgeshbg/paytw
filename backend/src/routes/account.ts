@@ -8,7 +8,6 @@ const prismaClient = new PrismaClient();
 
 const transferSchema = z.object({
   to: z.string().min(1),
-  from: z.string().min(1),
   amount: z.number().positive(),
 });
 
@@ -30,9 +29,9 @@ router.get('/balance', isAuth, async (req, res) => {
 router.post('/transfer', isAuth, async (req, res) => {
   const result = transferSchema.safeParse(req.body);
   if (result.success) {
-    const { to, from, amount: txnAmount } = result.data;
+    const { to, amount: txnAmount } = result.data;
     const toAccount = await prismaClient.user.findFirst({ where: { email: to } });
-    const fromAccount = await prismaClient.user.findFirst({ where: { email: from } });
+    const fromAccount = await prismaClient.user.findFirst({ where: { email: req.email } });
     if (!toAccount || !fromAccount) {
       res.status(400).json({ message: `Invalid account` });
       return;
@@ -50,7 +49,7 @@ router.post('/transfer', isAuth, async (req, res) => {
             userId: fromAccount.id,
           },
         });
-        if (sender.amount < 0) throw new Error(`${from} has insufficient funds.`);
+        if (sender.amount < 0) throw new Error(`${req.email} has insufficient funds.`);
         await txn.account.update({
           data: {
             amount: {
@@ -64,7 +63,7 @@ router.post('/transfer', isAuth, async (req, res) => {
       });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ message: `${from} has insufficient funds.` });
+      res.status(400).json({ message: `You have insufficient funds.` });
       return;
     }
 
