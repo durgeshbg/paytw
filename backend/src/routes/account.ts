@@ -60,6 +60,13 @@ router.post('/transfer', isAuth, async (req, res) => {
             userId: toAccount.id,
           },
         });
+        await txn.transaction.create({
+          data: {
+            amount: txnAmount,
+            from: { connect: fromAccount },
+            to: { connect: toAccount },
+          },
+        });
       });
     } catch (err) {
       console.log(err);

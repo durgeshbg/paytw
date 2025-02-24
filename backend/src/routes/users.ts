@@ -82,4 +82,22 @@ router.post('/signout', isAuth, (req, res) => {
   res.clearCookie('token').json({ message: 'Sign out successful' });
 });
 
+router.get('/', async (req, res) => {
+  const { filter } = req.query as { filter: string };
+  const users = await prismaClient.user.findMany({
+    select: {
+      email: true,
+      name: true,
+    },
+    where: {
+      name: {
+        contains: filter,
+        mode: 'insensitive',
+      },
+    },
+  });
+  res.json({ users });
+  return;
+});
+
 export default router;
