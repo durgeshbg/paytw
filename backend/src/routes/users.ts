@@ -69,10 +69,10 @@ router.post('/signin', async (req, res) => {
       if (match && process.env.JWT_SECRET) {
         const token = jwt.sign({ name: user.name, email }, process.env.JWT_SECRET);
         res.cookie('token', token).json({ message: 'Sign in successful' });
+        return;
       }
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
     }
+    res.status(401).json({ message: 'Invalid credentials' });
   } else {
     res.status(401).json({ error: result.error });
   }
