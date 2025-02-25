@@ -50,7 +50,7 @@ router.post('/signup', async (req, res) => {
     }
   } else {
     res.status(411).json({
-      errors: result.error,
+      error: result.error,
     });
   }
 });
@@ -82,7 +82,7 @@ router.post('/signout', isAuth, (req, res) => {
   res.clearCookie('token').json({ message: 'Sign out successful' });
 });
 
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
   const { filter } = req.query as { filter: string };
   const users = await prismaClient.user.findMany({
     select: {

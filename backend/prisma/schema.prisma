@@ -25,7 +25,7 @@ model Account {
   userId    Int      @unique
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
@@ -35,6 +35,6 @@ model Transaction {
   toId      Int
   createdAt DateTime @default(now())
 
-  from User @relation("from", fields: [fromId], references: [id])
-  to   User @relation("to", fields: [toId], references: [id])
+  from User @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to   User @relation("to", fields: [toId], references: [id], onDelete: Cascade)
 }
