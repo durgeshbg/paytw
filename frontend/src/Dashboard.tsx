@@ -1,4 +1,16 @@
+import axios from 'axios';
+import { url } from './config';
+import { getCookie } from './getCookie';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 export default function Dashboard() {
+  const token = getCookie('token');
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) navigate('/signin');
+  }, [token, navigate]);
+
   return (
     <div>
       <div className='flex justify-between items-center border px-5 py-4'>
@@ -6,6 +18,15 @@ export default function Dashboard() {
         <div className='flex gap-3 items-center'>
           <div>Hello, User</div>
           <div className='bg-slate-100 size-8 flex justify-center items-center rounded-full'>U</div>
+          <button
+            onClick={async () => {
+              await axios.post(url + '/users/signout', {}, { withCredentials: true });
+              navigate('/signin');
+            }}
+            className='bg-black text-white rounded-md px-2 py-1'
+          >
+            Logout
+          </button>
         </div>
       </div>
       <div className='font-bold px-5 py-5'>Your Balance (INR): 50000</div>
@@ -25,9 +46,9 @@ export default function Dashboard() {
         <div className='flex w-full justify-between'>
           <div className='flex items-center gap-2'>
             <div className='size-10 bg-slate-100 rounded-full flex items-center justify-center'>U1</div>
-            <div className="font-bold" >User 1</div>
+            <div className='font-bold'>User 1</div>
           </div>
-          <button className="bg-black text-white rounded-md px-4 py-2" >Send Money</button>
+          <button className='bg-black text-white rounded-md px-4 py-2'>Send Money</button>
         </div>
       </div>
     </div>

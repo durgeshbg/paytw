@@ -6,9 +6,11 @@ import Dashboard from './Dashboard.tsx';
 import SignIn from './SignIn.tsx';
 import Transfer from './Transfer.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <ToastContainer />
     <BrowserRouter>
       <Routes>
         <Route path='/signin' element={<SignIn />} />

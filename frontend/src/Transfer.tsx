@@ -1,4 +1,14 @@
+import { useNavigate } from 'react-router-dom';
+import { getCookie } from './getCookie';
+import { useEffect } from 'react';
+
 export default function Transfer() {
+  const token = getCookie('token');
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) navigate('/signin');
+  }, [token, navigate]);
+
   return (
     <div className='bg-white border min-w-96 max-w-xl mx-auto flex flex-col gap-8 p-8 items-center rounded-md shadow-md mt-32'>
       <p className='text-2xl font-bold'>Transfer Money</p>
