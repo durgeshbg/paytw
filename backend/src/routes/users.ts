@@ -90,10 +90,19 @@ router.get('/', isAuth, async (req, res) => {
       name: true,
     },
     where: {
-      name: {
-        contains: filter,
-        mode: 'insensitive',
-      },
+      AND: [
+        {
+          name: {
+            contains: filter,
+            mode: 'insensitive',
+          },
+        },
+        {
+          email: {
+            not: req.email,
+          },
+        },
+      ],
     },
   });
   res.json({ users });

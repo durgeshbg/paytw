@@ -77,7 +77,7 @@ router.post('/transfer', isAuth, async (req, res) => {
     res.json({ message: `Transfer successful` });
   } else {
     res.status(400).json({
-      message: 'Invalid inputs',
+      error: result.error,
     });
   }
 });
