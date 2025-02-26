@@ -1,23 +1,60 @@
 import axios from 'axios';
 import { url } from './config';
-import { getCookie } from './getCookie';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { getCookie } from './useCookie';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { decodeToken } from 'react-jwt';
+import { Token } from './types';
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
   const token = getCookie('token');
   const navigate = useNavigate();
+  const [tokenData, settokenData] = useState<Token>();
+  const [balance, setbalance] = useState('0');
+  const [sendUser, setSendUser] = useState({});
+  const [users, setUsers] = useState<[]>([]);
+
   useEffect(() => {
     if (!token) navigate('/signin');
+
+    settokenData(decodeToken(token as string));
+
+    (async () => {
+      try {
+        const { data } = await axios.get(url + '/account/balance', { withCredentials: true });
+        setbalance(data.balance);
+      } catch (e) {
+        toast.error('Error fetching balance.');
+        console.error(e);
+      }
+    })();
+
+    (async () => {
+      try {
+        const { data } = await axios.get(url + '/users', { withCredentials: true });
+        setUsers(data.users);
+      } catch (e) {
+        toast.error('Error fetching your friends.');
+        console.error(e);
+      }
+    })();
   }, [token, navigate]);
+
+  const handleSend = (user: { email: string; name: string }) => {
+    setSendUser(user);
+    navigate('/dashboard/transfer');
+  };
 
   return (
     <div>
       <div className='flex justify-between items-center border px-5 py-4'>
         <h1 className='text-2xl font-bold'>Payments Dashboard</h1>
         <div className='flex gap-3 items-center'>
-          <div>Hello, User</div>
-          <div className='bg-slate-100 size-8 flex justify-center items-center rounded-full'>U</div>
+          <div>Hello, {tokenData ? tokenData.name : 'User'}</div>
+          <div className='bg-slate-100 size-8 flex justify-center items-center rounded-full'>
+            {tokenData ? tokenData.name[0] : 'User'}
+          </div>
           <button
             onClick={async () => {
               await axios.post(url + '/users/signout', {}, { withCredentials: true });
@@ -29,28 +66,7 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-      <div className='font-bold px-5 py-5'>Your Balance (INR): 50000</div>
-      <div className='flex flex-col gap-3 justify-start px-5'>
-        <label className='font-bold' htmlFor='query'>
-          Users
-        </label>
-        <input
-          className='border rounded-md min-w-96 w-11/12 h-10 px-5 outline-gray-500'
-          type='text'
-          name='query'
-          id='query'
-          placeholder='Search Users...'
-        />
-      </div>
-      <div className='flex flex-col px-5 mt-8'>
-        <div className='flex w-full justify-between'>
-          <div className='flex items-center gap-2'>
-            <div className='size-10 bg-slate-100 rounded-full flex items-center justify-center'>U1</div>
-            <div className='font-bold'>User 1</div>
-          </div>
-          <button className='bg-black text-white rounded-md px-4 py-2'>Send Money</button>
-        </div>
-      </div>
+      <Outlet context={{ balance, users, handleSend, setUsers, sendUser }} />
     </div>
   );
 }
