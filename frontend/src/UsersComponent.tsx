@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { url } from './config';
-import { useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 export default function UsersComponent() {
   const { balance, users, handleSend, setUsers } = useOutletContext<{
@@ -37,7 +37,15 @@ export default function UsersComponent() {
 
   return (
     <>
-      <div className='font-bold px-5 py-5'>Your Balance (INR): {balance}</div>
+      <div className='flex w-full justify-between'>
+        <div className='font-bold px-5 py-5'>Your Balance (INR): {balance}</div>
+        <Link
+          to={'/transactions'}
+          className='mx-5 my-3 px-3 flex items-center justify-center border border-black rounded-md font-bold'
+        >
+          Transactions
+        </Link>
+      </div>
       <div className='flex flex-col gap-3 justify-start px-5'>
         <label className='font-bold' htmlFor='query'>
           Users

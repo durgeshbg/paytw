@@ -12,7 +12,7 @@ export default function SignUp() {
   const { handleSubmit } = useSubmit();
 
   useEffect(() => {
-    if (token) navigate('/dashboard');
+    if (token) navigate('/');
   }, [token, navigate]);
 
   return (

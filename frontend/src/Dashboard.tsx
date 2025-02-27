@@ -43,7 +43,7 @@ export default function Dashboard() {
 
   const handleSend = (user: { email: string; name: string }) => {
     setSendUser(user);
-    navigate('/dashboard/transfer');
+    navigate('/transfer');
   };
 
   return (

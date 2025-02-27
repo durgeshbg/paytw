@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { FormEvent, useEffect, useState } from 'react';
 import { getCookie } from './useCookie';
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -15,7 +15,7 @@ export default function Transfer() {
   useEffect(() => {
     if (!token) navigate('/signin');
     if (!sendUser.name) {
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [token, navigate, sendUser.name]);
 
@@ -33,7 +33,7 @@ export default function Transfer() {
         );
         if (res.data) {
           toast.success(res.data.message);
-          navigate('/dashboard');
+          navigate('/');
         }
       } catch (e) {
         const { response } = e as AxiosError;
@@ -52,6 +52,11 @@ export default function Transfer() {
 
   return (
     <div className='bg-white border min-w-96 max-w-xl mx-auto flex flex-col gap-8 p-8 items-center rounded-md shadow-md mt-32'>
+      <div className='flex w-full'>
+        <Link to={'/'} className='underline rounded-md px-2 py-1'>
+          ⮐ Back
+        </Link>
+      </div>
       <p className='text-2xl font-bold'>Transfer Money</p>
       <form onSubmit={sendAmount} className='flex flex-col justify-start space-y-4'>
         <div className='flex items-center gap-2'>

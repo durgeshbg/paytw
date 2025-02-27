@@ -10,7 +10,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const { handleSubmit } = useSubmit();
   useEffect(() => {
-    if (token) navigate('/dashboard');
+    if (token) navigate('/');
   }, [token, navigate]);
 
   return (

@@ -20,7 +20,7 @@ export const useSubmit = () => {
       );
       if (res.data.message) {
         toast.success(res.data.message);
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (e) {
       const { response } = e as AxiosError;

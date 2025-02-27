@@ -8,6 +8,7 @@ import Transfer from './Transfer.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import UsersComponent from './UsersComponent.tsx';
+import Transacions from './Transacions.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,9 +17,10 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
-        <Route path='/dashboard' element={<Dashboard />}>
+        <Route path='/' element={<Dashboard />}>
           <Route index element={<UsersComponent />} />
           <Route path='transfer' element={<Transfer />} />
+          <Route path='transactions' element={<Transacions />} />
         </Route>
       </Routes>
     </BrowserRouter>
