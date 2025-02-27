@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { url } from './config';
 import { ZodIssue } from 'zod';
+import { getRelativeTime } from './utils';
 
 export default function Transacions() {
   const [transactions, setTransactions] = useState<{ sent: []; received: [] }>({ sent: [], received: [] });
@@ -47,9 +48,9 @@ export default function Transacions() {
           Recieved
         </button>
       </div>
-      <div className='flex flex-col gap-5'>
+      <div className='flex flex-col gap-6'>
         {transactions[tab].map((transaction: any, i: number) => (
-          <div key={i} className='flex items-center justify-between w-96 mx-auto'>
+          <div key={i} className='flex items-center justify-between gap-10 max-w-fit flex-wrap'>
             <div className='flex items-center gap-5'>
               <div className='size-10 bg-gray-200 flex items-center justify-center rounded-full'>O</div>
               <div>{transaction[toOrFrom].name}</div>
@@ -61,6 +62,9 @@ export default function Transacions() {
                 }
               >
                 {transaction.amount as number} (INR)
+              </div>
+              <div className='text-xs text-gray-500'>
+                <div>{getRelativeTime(transaction.createdAt)}</div>
               </div>
             </div>
           </div>
