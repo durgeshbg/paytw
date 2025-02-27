@@ -40,7 +40,13 @@ router.post('/signup', async (req, res) => {
       if (process.env.JWT_SECRET) {
         const token = jwt.sign({ name, email }, process.env.JWT_SECRET);
         res
-          .cookie('token', token, { sameSite: 'none', secure: true, maxAge: 86400000, httpOnly: true })
+          .cookie('token', token, {
+            sameSite: 'none',
+            secure: true,
+            maxAge: 86400000,
+            httpOnly: true,
+            domain: '.netlify.app',
+          })
           .json({ message: 'Sign up successful' });
       } else {
         res.status(500).json({ message: 'Server error: Could not generate token.' });
@@ -71,7 +77,7 @@ router.post('/signin', async (req, res) => {
       if (match && process.env.JWT_SECRET) {
         const token = jwt.sign({ name: user.name, email }, process.env.JWT_SECRET);
         res
-          .cookie('token', token, { sameSite: 'none', secure: true, maxAge: 86400000, httpOnly: true })
+          .cookie('token', token, { sameSite: 'none', secure: true, maxAge: 86400000, httpOnly: true, domain: '.netlify.app' })
           .json({ message: 'Sign in successful' });
         return;
       }
