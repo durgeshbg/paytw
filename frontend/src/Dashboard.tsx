@@ -20,25 +20,27 @@ export default function Dashboard() {
 
     settokenData(decodeToken(token as string));
 
-    (async () => {
-      try {
-        const { data } = await axios.get(url + '/account/balance', { withCredentials: true });
-        setbalance(data.balance);
-      } catch (e) {
-        toast.error('Error fetching balance.');
-        console.error(e);
-      }
-    })();
+    if (token) {
+      (async () => {
+        try {
+          const { data } = await axios.get(url + '/account/balance', { withCredentials: true });
+          setbalance(data.balance);
+        } catch (e) {
+          toast.error('Error fetching balance.');
+          console.error(e);
+        }
+      })();
 
-    (async () => {
-      try {
-        const { data } = await axios.get(url + '/users', { withCredentials: true });
-        setUsers(data.users);
-      } catch (e) {
-        toast.error('Error fetching your friends.');
-        console.error(e);
-      }
-    })();
+      (async () => {
+        try {
+          const { data } = await axios.get(url + '/users', { withCredentials: true });
+          setUsers(data.users);
+        } catch (e) {
+          toast.error('Error fetching your friends.');
+          console.error(e);
+        }
+      })();
+    }
   }, [token, navigate]);
 
   const handleSend = (user: { email: string; name: string }) => {
