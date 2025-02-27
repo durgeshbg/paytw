@@ -3,6 +3,8 @@ import rootRouter from './routes/index';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+
 dotenv.config();
 
 const app = express();
@@ -13,6 +15,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(morgan('combined'))
 app.use(cookieParser());
 app.use(express.json());
 

@@ -24,15 +24,19 @@ export const useSubmit = () => {
       }
     } catch (e) {
       const { response } = e as AxiosError;
-      const { data } = response as AxiosResponse;
 
-      if (data.error) {
-        data.error.issues.map((issue: ZodIssue) => {
-          toast.error(`${issue.path[0]} - ${issue.message}`);
-        });
-      } else {
-        toast.error(data.message);
+      if (response?.data) {
+        const { data } = response as AxiosResponse;
+
+        if (data.error) {
+          data.error.issues.map((issue: ZodIssue) => {
+            toast.error(`${issue.path[0]} - ${issue.message}`);
+          });
+        } else {
+          toast.error(data.message);
+        }
       }
+      console.error(e);
     }
   };
 
