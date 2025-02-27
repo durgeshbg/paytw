@@ -4,7 +4,6 @@ import { ZodIssue } from 'zod';
 import { url } from './config';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 export const useSubmit = () => {
   const navigate = useNavigate();
