@@ -39,7 +39,7 @@ router.post('/signup', async (req, res) => {
       });
       if (process.env.JWT_SECRET) {
         const token = jwt.sign({ name, email }, process.env.JWT_SECRET);
-        res.cookie('token', token).json({ message: 'Sign up successful' });
+        res.json({ token, message: 'Sign up successful' });
       } else {
         res.status(500).json({ message: 'Server error: Could not generate token.' });
       }
@@ -68,7 +68,7 @@ router.post('/signin', async (req, res) => {
       const match = await bcrypyt.compare(password, user.password);
       if (match && process.env.JWT_SECRET) {
         const token = jwt.sign({ name: user.name, email }, process.env.JWT_SECRET);
-        res.cookie('token', token).json({ message: 'Sign in successful' });
+        res.json({ token, message: 'Sign in successful' });
         return;
       }
     }

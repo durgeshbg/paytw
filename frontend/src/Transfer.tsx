@@ -1,13 +1,13 @@
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { FormEvent, useEffect, useState } from 'react';
-import { getCookie } from './useCookie';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { url } from './config';
 import { toast } from 'react-toastify';
 import { ZodIssue } from 'zod';
+import { getToken } from './utils';
 
 export default function Transfer() {
-  const token = getCookie('token');
+  const token = getToken();
   const navigate = useNavigate();
   const [amount, setAmount] = useState('0');
   const { sendUser } = useOutletContext<{ sendUser: { name: string; email: string } }>();
@@ -29,7 +29,7 @@ export default function Transfer() {
             to: sendUser.email,
             amount: parseInt(amount),
           },
-          { withCredentials: true }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         if (res.data) {
           toast.success(res.data.message);

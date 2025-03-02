@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { url } from './config';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import { getToken } from './utils';
 
 export default function UsersComponent() {
   const { balance, users, handleSend, setUsers } = useOutletContext<{
@@ -12,13 +13,19 @@ export default function UsersComponent() {
   }>();
 
   const [query, setQuery] = useState('');
+  const token = getToken();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!token) navigate('/signin');
     const abortController = new AbortController();
     const signal = abortController.signal;
     const timer = setTimeout(async () => {
       try {
-        const res = await axios.get(url + '/users?filter=' + query, { signal, withCredentials: true });
+        const res = await axios.get(url + '/users?filter=' + query, {
+          signal,
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!signal.aborted) {
           setUsers(res.data.users);
         }
@@ -33,7 +40,7 @@ export default function UsersComponent() {
       clearInterval(timer);
       abortController.abort();
     };
-  }, [query, setUsers]);
+  }, [query, setUsers, token, navigate]);
 
   return (
     <>

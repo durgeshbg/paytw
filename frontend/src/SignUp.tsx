@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCookie } from './useCookie';
-import { useSubmit } from './utils';
+import { getToken, useSubmit } from './utils';
 
 export default function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const token = getCookie('token');
+  const token = getToken();
   const navigate = useNavigate();
   const { handleSubmit } = useSubmit();
 

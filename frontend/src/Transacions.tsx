@@ -1,21 +1,24 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { url } from './config';
 import { ZodIssue } from 'zod';
-import { getRelativeTime } from './utils';
+import { getRelativeTime, getToken } from './utils';
 
 export default function Transacions() {
   const [transactions, setTransactions] = useState<{ sent: []; received: [] }>({ sent: [], received: [] });
   const [tab, setTab] = useState<'sent' | 'received'>('sent');
+  const token = getToken();
+  const navigate = useNavigate();
 
   const toOrFrom: 'to' | 'from' = tab === 'sent' ? 'to' : 'from';
 
   useEffect(() => {
+    if (!token) navigate('/signin');
     (async () => {
       try {
-        const res = await axios.get(url + '/transactions', { withCredentials: true });
+        const res = await axios.get(url + '/transactions', { headers: { Authorization: `Bearer ${token}` } });
         setTransactions(res.data);
       } catch (e) {
         const { response } = e as AxiosError;
@@ -30,7 +33,7 @@ export default function Transacions() {
         }
       }
     })();
-  }, []);
+  }, [token, navigate]);
 
   return (
     <div className='flex flex-col px-4 gap-5'>

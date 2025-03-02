@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { url } from './config';
-import { getCookie } from './useCookie';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { decodeToken } from 'react-jwt';
 import { Token } from './types';
 import { toast } from 'react-toastify';
+import { getToken } from './utils';
 
 export default function Dashboard() {
-  const token = getCookie('token');
+  const token = getToken();
   const navigate = useNavigate();
   const [tokenData, settokenData] = useState<Token>();
   const [balance, setbalance] = useState('0');
@@ -23,7 +23,9 @@ export default function Dashboard() {
     if (token) {
       (async () => {
         try {
-          const { data } = await axios.get(url + '/account/balance', { withCredentials: true });
+          const { data } = await axios.get(url + '/account/balance', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           setbalance(data.balance);
         } catch (e) {
           toast.error('Error fetching balance.');
@@ -33,7 +35,9 @@ export default function Dashboard() {
 
       (async () => {
         try {
-          const { data } = await axios.get(url + '/users', { withCredentials: true });
+          const { data } = await axios.get(url + '/users', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           setUsers(data.users);
         } catch (e) {
           toast.error('Error fetching your friends.');
@@ -59,7 +63,8 @@ export default function Dashboard() {
           </div>
           <button
             onClick={async () => {
-              await axios.post(url + '/users/signout', {}, { withCredentials: true });
+              await axios.post(url + '/users/signout', {}, { headers: { Authorization: `Bearer ${token}` } });
+              localStorage.setItem('paytw-token', '');
               navigate('/signin');
             }}
             className='bg-black text-white rounded-md px-2 py-1'

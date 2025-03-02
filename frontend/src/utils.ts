@@ -11,14 +11,11 @@ export const useSubmit = () => {
   const handleSubmit = async (e: FormEvent, data: object, type: 'signin' | 'signup') => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        url + '/users/' + type,
-        {
-          ...data,
-        },
-        { withCredentials: true }
-      );
-      if (res.data.message) {
+      const res = await axios.post(url + '/users/' + type, {
+        ...data,
+      });
+      if (res.data) {
+        localStorage.setItem('paytw-token', res.data.token);
         toast.success(res.data.message);
         navigate('/');
       }
@@ -67,3 +64,5 @@ export const getRelativeTime = (timestamp: string): string => {
 
   return 'just now';
 };
+
+export const getToken = () => localStorage.getItem('paytw-token');
