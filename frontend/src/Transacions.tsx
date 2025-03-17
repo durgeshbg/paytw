@@ -7,7 +7,10 @@ import { ZodIssue } from 'zod';
 import { getRelativeTime, getToken } from './utils';
 
 export default function Transacions() {
-  const [transactions, setTransactions] = useState<{ sent: []; received: [] }>({ sent: [], received: [] });
+  const [transactions, setTransactions] = useState<{ sent: []; received: [] }>({
+    sent: [],
+    received: [],
+  });
   const [tab, setTab] = useState<'sent' | 'received'>('sent');
   const token = getToken();
   const navigate = useNavigate();
@@ -18,7 +21,9 @@ export default function Transacions() {
     if (!token) navigate('/signin');
     (async () => {
       try {
-        const res = await axios.get(url + '/transactions', { headers: { Authorization: `Bearer ${token}` } });
+        const res = await axios.get(url + '/transactions', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setTransactions(res.data);
       } catch (e) {
         const { response } = e as AxiosError;
@@ -44,24 +49,37 @@ export default function Transacions() {
       </div>
       <div className='text-xl font-bold'>Transactions</div>
       <div className='flex gap-3 justify-end'>
-        <button className='border-2 border-black rounded-md px-4 py-1' onClick={() => setTab('sent')}>
+        <button
+          className='border-2 border-black rounded-md px-4 py-1'
+          onClick={() => setTab('sent')}
+        >
           Sent
         </button>
-        <button className='border-2 border-black rounded-md px-4 py-1' onClick={() => setTab('received')}>
+        <button
+          className='border-2 border-black rounded-md px-4 py-1'
+          onClick={() => setTab('received')}
+        >
           Recieved
         </button>
       </div>
       <div className='flex flex-col gap-6'>
         {transactions[tab].map((transaction: any, i: number) => (
-          <div key={i} className='flex items-center justify-between gap-10 max-w-fit flex-wrap'>
+          <div
+            key={i}
+            className='flex items-center justify-between gap-10 max-w-fit flex-wrap'
+          >
             <div className='flex items-center gap-5'>
-              <div className='size-10 bg-gray-200 flex items-center justify-center rounded-full'>O</div>
+              <div className='size-10 bg-gray-200 flex items-center justify-center rounded-full'>
+                O
+              </div>
               <div>{transaction[toOrFrom].name}</div>
             </div>
             <div>
               <div
                 className={
-                  toOrFrom === 'to' ? 'text-red-600 before:content-["-"]' : 'text-green-600 before:content-["+"]'
+                  toOrFrom === 'to'
+                    ? 'text-red-600 before:content-["-"]'
+                    : 'text-green-600 before:content-["+"]'
                 }
               >
                 {transaction.amount as number} (INR)
@@ -72,6 +90,9 @@ export default function Transacions() {
             </div>
           </div>
         ))}
+        {!transactions[tab].length && (
+          <div className='text-center'>No transactions {tab} here.</div>
+        )}
       </div>
     </div>
   );
