@@ -15,7 +15,9 @@ export default function SignIn() {
   return (
     <div className='bg-white border min-w-96 max-w-xl mx-auto flex flex-col gap-8 p-8 items-center rounded-md shadow-md mt-32'>
       <p className='text-2xl font-bold'>Sign In</p>
-      <p className='text-gray-500'>Enter your credentials to access your account</p>
+      <p className='text-gray-500'>
+        Enter your credentials to access your account
+      </p>
       <form
         onSubmit={(e) => {
           handleSubmit(e, { email, password }, 'signin');
@@ -50,7 +52,24 @@ export default function SignIn() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button className='bg-black text-white py-3 rounded-md'>Sign In</button>
+        <div className='flex justify-between gap-5'>
+          <button
+            type='submit'
+            className='bg-black text-white py-3 rounded-md px-6 w-full'
+          >
+            Sign In
+          </button>
+          <button
+            type='button'
+            onClick={() => {
+              setEmail('test@mail.com');
+              setPassword('testtest');
+            }}
+            className='bg-black text-white py-3 rounded-md px-6 w-full'
+          >
+            Test Credentials
+          </button>
+        </div>
       </form>
       <p>
         Don't have an account?{' '}
